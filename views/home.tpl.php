@@ -1,3 +1,6 @@
+<?php
+echo "<h1 style=\"color:#FFF\">{$viewData}</h1>";
+?>
 <section class="page-section clearfix">
       <div class="container">
         <div class="intro">

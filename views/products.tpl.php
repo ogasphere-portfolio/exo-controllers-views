@@ -1,3 +1,6 @@
+<?php
+echo "<h1 style=\"color:#FFF\">{$viewData}</h1>";
+?>
 <section class="page-section">
       <div class="container">
         <div class="product-item">

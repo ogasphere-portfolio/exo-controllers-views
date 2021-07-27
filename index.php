@@ -63,27 +63,21 @@ $controller = new MainController();
 
 if ($currentPage == 'store')
 {
-    $weekOpeningHours = [
-        'Sunday' => 'Closed', 
-        'Monday' => '7:00 AM to 8:00 PM',
-        'Tuesday' => '12:12 AM to 8:00 PM',
-        'Wednesday' => '7:00 AM to 8:00 PM',
-        'Thursday' => '7:00 AM to 8:00 PM',
-        'Friday' => '7:00 AM to 8:00 PM',
-        'Saturday' => '9:00 AM to 5:00 PM'
-    ];
-    // j'utilise ma fonction show pour rendre générique l'inclusion de template
-    // comprendre générique : réutilisable
-    $controller->show($currentPage, $weekOpeningHours);
+    // comme c'est le rôle du controller
+    // je lui demande d'afficher la page store
+    // sans rien savoir de ce que le controller va faire
+    $controller->affichePageStore();
 }
 else if ($currentPage == 'home') {
-    // j'utilise ma fonction show pour rendre générique l'inclusion de template
-    // comprendre générique : réutilisable
-    $controller->show($currentPage, 'je suis un paramètre pour la page HOME');
+// comme c'est le rôle du controller
+    // je lui demande d'afficher la page home
+    // sans rien savoir de ce que le controller va faire
+    $controller->affichePageHome();
 }
 else if ($currentPage == 'products') {
-    // j'utilise ma fonction show pour rendre générique l'inclusion de template
-    // comprendre générique : réutilisable
-    $controller->show($currentPage, 'je suis un paramètre pour la page PRODUCTS');
+// comme c'est le rôle du controller
+    // je lui demande d'afficher la page product
+    // sans rien savoir de ce que le controller va faire
+    $controller->affichePageProducts();
 }
 

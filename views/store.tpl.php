@@ -1,5 +1,5 @@
 <?php
-// var_dump($viewData);
+//echo "<h1 style=\"color:#FFF\">{$viewData}</h1>";
 ?>
 <section class="page-section cta">
       <div class="container">
