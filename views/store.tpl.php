@@ -1,3 +1,6 @@
+<?php
+// var_dump($viewData);
+?>
 <section class="page-section cta">
       <div class="container">
         <div class="row">
@@ -8,34 +11,17 @@
                 <span class="section-heading-lower">We're Open</span>
               </h2>
               <ul class="list-unstyled list-hours mb-5 text-left mx-auto">
-                <li class="list-unstyled-item list-hours-item d-flex">
-                  Sunday
-                  <span class="ml-auto">Closed</span>
+              <?php 
+              // exemple de ligne : 'Monday' => '7:00 AM to 8:00 PM'
+              // $day = 'Monday'
+              // $openingHours = '7:00 AM to 8:00 PM'
+              foreach ($viewData as $day => $openingHours) : 
+              ?>
+              <li class="list-unstyled-item list-hours-item d-flex">
+                  <?= $day ?>
+                  <span class="ml-auto"><?= $openingHours ?></span>
                 </li>
-                <li class="list-unstyled-item list-hours-item d-flex">
-                  Monday
-                  <span class="ml-auto">7:00 AM to 8:00 PM</span>
-                </li>
-                <li class="list-unstyled-item list-hours-item d-flex">
-                  Tuesday
-                  <span class="ml-auto">7:00 AM to 8:00 PM</span>
-                </li>
-                <li class="list-unstyled-item list-hours-item d-flex">
-                  Wednesday
-                  <span class="ml-auto">7:00 AM to 8:00 PM</span>
-                </li>
-                <li class="list-unstyled-item list-hours-item d-flex">
-                  Thursday
-                  <span class="ml-auto">7:00 AM to 8:00 PM</span>
-                </li>
-                <li class="list-unstyled-item list-hours-item d-flex">
-                  Friday
-                  <span class="ml-auto">7:00 AM to 8:00 PM</span>
-                </li>
-                <li class="list-unstyled-item list-hours-item d-flex">
-                  Saturday
-                  <span class="ml-auto">9:00 AM to 5:00 PM</span>
-                </li>
+              <?php endforeach ?>
               </ul>
               <p class="address mb-5">
                 <em>
