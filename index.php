@@ -79,5 +79,10 @@ else if ($currentPage == 'products') {
     // je lui demande d'afficher la page product
     // sans rien savoir de ce que le controller va faire
     $controller->affichePageProducts();
-}
+}else if ($currentPage == 'about') {
+    // comme c'est le rôle du controller
+        // je lui demande d'afficher la page product
+        // sans rien savoir de ce que le controller va faire
+        $controller->affichePageAbout();
 
+}

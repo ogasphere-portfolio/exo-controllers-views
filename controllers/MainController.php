@@ -33,24 +33,36 @@ class MainController {
     }
 
 
-    public function affichePageStore(){
+    public function affichePageStore()
+    {
         // j'utilise la méthode show avec les bons paramètres
         // je sais que cette méthode doit affiche la page store, obvious, le nom de la méthode
         $this->show('store', $this->weekOpeningHours);
     }
 
 
-    public function affichePageHome(){
+    public function affichePageHome()
+    {
         // j'utilise la méthode show avec les bons paramètres
         // je sais que cette méthode doit affiche la page store, obvious, le nom de la méthode
         $this->show('home', "Je suis la page HOME");
     }
 
-    public function affichePageProducts(){
+    public function affichePageAbout()
+    {
+        // j'utilise la méthode show avec les bons paramètres
+        // je sais que cette méthode doit affiche la page store, obvious, le nom de la méthode
+        $this->show('about', "Je suis la page ABOUT");
+    }
+
+    public function affichePageProducts()
+    {
         // j'utilise la méthode show avec les bons paramètres
         // je sais que cette méthode doit affiche la page store, obvious, le nom de la méthode
         $this->show('products', "Je suis la page PRODUCTS");
     }
+
+
 /**
  * Fonction qui require les templates HEADER / FOOTER
  * Ainsi que la vue donnée en paramètre
@@ -63,31 +75,31 @@ class MainController {
  $viewName = $currentPage;
  $viewData = $weekOpeningHours;
 */
-public function show($viewName, $viewData)
-{
-    require_once __DIR__.'/../views/header.tpl.php';
+    public function show($viewName, $viewData)
+    {
+        require_once __DIR__.'/../views/header.tpl.php';
 
-    /****************************************** */
-    // exemples : require_once __DIR__."/views/{$viewName}.tpl.php";
-    // si $viewName == 'home'   
-    // require_once __DIR__."/views/home.tpl.php";
-    // si $viewName == 'products'   
-    // require_once __DIR__."/views/products.tpl.php";
-    // si $viewName == 'store'   
-    // require_once __DIR__."/views/store.tpl.php";
-    /****************************************** */
-    
-    // ici je peux utiliser $viewData
-    // donc dans le require aussi
+        /****************************************** */
+        // exemples : require_once __DIR__."/views/{$viewName}.tpl.php";
+        // si $viewName == 'home'   
+        // require_once __DIR__."/views/home.tpl.php";
+        // si $viewName == 'products'   
+        // require_once __DIR__."/views/products.tpl.php";
+        // si $viewName == 'store'   
+        // require_once __DIR__."/views/store.tpl.php";
+        /****************************************** */
+        
+        // ici je peux utiliser $viewData
+        // donc dans le require aussi
 
-    require_once __DIR__."/../views/{$viewName}.tpl.php";
-    require_once __DIR__.'/../views/footer.tpl.php';
+        require_once __DIR__."/../views/{$viewName}.tpl.php";
+        require_once __DIR__.'/../views/footer.tpl.php';
 
-    /* A la manière de la Saison 4 */
-    //require __DIR__.'/views/header.tpl.php';
-    // require __DIR__."/views/{$currentPage}.tpl.php";
-    // Autre manière de concatener notre variable
-    // require __DIR__.'/views/'.$currentPage.'.tpl.php';
-    //require __DIR__.'/views/footer.tpl.php';
-}
+        /* A la manière de la Saison 4 */
+        //require __DIR__.'/views/header.tpl.php';
+        // require __DIR__."/views/{$currentPage}.tpl.php";
+        // Autre manière de concatener notre variable
+        // require __DIR__.'/views/'.$currentPage.'.tpl.php';
+        //require __DIR__.'/views/footer.tpl.php';
+    }
 }
