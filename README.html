@@ -1,0 +1,143 @@
+<h1 id="structurer-une-application-avec-des-classes-sunglasses">Structurer une application avec des classes 😎</h1>
+<p>Voici un petit site internet de 3 pages.</p>
+<p>Actuellement, il y a 3 fichiers HTML statiques (1 par page du site).</p>
+<p>On va améliorer ce site et rendre le tout <em>dynamique</em> !</p>
+<p>Pour ce faire, on va adopter une <em>structuration</em> orientée objet plus professionnelle, plus maintenable et plus scalable. 👍</p>
+<h2 id="étape-1--préparation">Étape 1 : préparation</h2>
+<ul>
+<li><strong>Fichiers views</strong> :</li>
+<li>déplacer les fichiers HTML dans un sous-répertoire <em><code>/views</code></em></li>
+<li>renommer :<ul>
+<li>le fichier <code>index.html</code> en <code>home.tpl.php</code></li>
+<li>et les 2 autres fichiers <code>.html</code> en fichiers <code>.tpl.php</code></li></ul></li>
+<li>les fichiers <code>.tpl.php</code> (tpl = templates) seront responsables de la génération du code HTML de nos pages</li>
+<li><strong>Fichier point d'entrée unique</strong> :</li>
+<li>créer le fichier "point d'entrée" du site dynamique à la racine du projet, par convention, nommons le  <code>index.php</code></li>
+<li>🤔 <em>ce fichier correspond aux URLs que nous "exposons" à nos visiteurs : ils n'accéderont jamais directement au dossier <code>/views</code></em></li>
+<li><strong>Lier les deux</strong> :</li>
+<li>💡 pour distinguer les pages malgré notre point d'entrée unique, on va utiliser un paramètre d'URL (query string)​</li>
+<li>ainsi, dans <code>index.php</code>, selon la valeur du <em>paramètre d'URL <code>page</code></em> =&gt; <strong>inclure le template correspondant</strong><ul>
+<li><strong>page d'accueil</strong> : </li>
+<li>URL : <code>index.php</code> </li>
+<li>template à charger : <code>home.tpl.php</code></li>
+<li><strong>page magasin</strong> : </li>
+<li>URL : <code>index.php?page=store</code></li>
+<li>template à charger : <code>store.tpl.php</code></li>
+<li><strong>page produits</strong> :</li>
+<li>URL : <code>index.php?page=products</code></li>
+<li>template à charger : <code>products.tpl.php</code></li></ul></li>
+</ul>
+<pre><code class="hljs php language-php"><span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/views/home.tpl.php&#x27;</span>; <span class="hljs-comment">// pour la home</span>
+</code></pre>
+<h2 id="étape-2--views">Étape 2 : views</h2>
+<ul>
+<li><code>view</code> ou <code>template</code>, même combat 💪 🎨 💄</li>
+<li><strong>factoriser le code HTML répété</strong> dans les fichiers de vue (templates) :</li>
+<li>créer une vue <code>header.tpl.php</code> dans <em>views</em></li>
+<li>créer une vue <code>footer.tpl.php</code> dans <em>views</em></li>
+<li><strong>inclure ces 2 fichiers</strong> sur toutes les pages du site en modifiant l'unique fichier "point d'entrée"</li>
+</ul>
+<h2 id="étape-3--une-fonction-daffichage">Étape 3 : une fonction d'affichage</h2>
+<ul>
+<li><strong>déclarer une fonction <code>show</code> dans <code>index.php</code></strong> qui va s'occuper d'inclure les vues</li>
+</ul>
+<pre><code class="hljs php language-php">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">show</span>(<span class="hljs-params"><span class="hljs-variable">$viewName</span></span>)
+  </span>{
+      <span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/views/header.tpl.php&#x27;</span>;
+      <span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/views/&#x27;</span>.<span class="hljs-variable">$viewName</span>.<span class="hljs-string">&#x27;.tpl.php&#x27;</span>;
+      <span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/views/footer.tpl.php&#x27;</span>;
+  }
+</code></pre>
+<ul>
+<li><p><strong>utiliser cette fonction</strong> pour générer le code HTML de la page</p></li>
+<li><p>🤔 pourrait-on réutiliser cette fonction dans d'autres projets ayant la même structure ?</p></li>
+</ul>
+<h2 id="étape-4--heures-douverture">Étape 4 : heures d'ouverture</h2>
+<ul>
+<li>dans la page "store", on affiche les horaires d'ouverture</li>
+<li>et, dans le code HTML d'origine,</li>
+<li>le <em>jour d'aujourd'hui</em> est affiché en jaune et en gras</li>
+<li>cependant, c'est du code JavaScript qui fait cela (ajout d'une classe CSS <code>today</code> sur le bon <code>&lt;li&gt;</code>)</li>
+<li><strong>désormais, on voudrait générer les horaires et l'affichage du jour d'aujourd'hui avec PHP</strong> sans code JavaScript 💥</li>
+<li><strong>on va donc avoir besoin des données suivantes</strong> :</li>
+<li>les <em>horaires d'ouverture</em> de chaque jour de la semaine (voir tableau ci-dessous)</li>
+<li>le <em>jour d'aujourd'hui</em> (💡 la <a href="https://www.php.net/manual/fr/function.date.php">fonction date()</a> pourrait nous aider)</li>
+<li><strong>mais où coder tout ça ?</strong> 🤔</li>
+<li>~~directement dans les fichiers <em>views/templates</em>~~ ❌</li>
+<li>pour continuer à bien <em>séparer les choses</em> : <ul>
+<li>on va d'abord <em>préparer les données</em> 👍</li>
+<li>puis <em>les transmettre à nos templates</em> ✔️</li>
+<li>⚠️  il va falloir modifier la <code>fonction show()</code> et faire attention à la portée des variables 😈</li></ul></li>
+</ul>
+<p><details><summary>Tableau des horaires d'ouverture</summary></p>
+<pre><code class="hljs php language-php"><span class="hljs-variable">$weekOpeningHours</span> = [
+    <span class="hljs-string">&#x27;Sunday&#x27;</span> =&gt; <span class="hljs-string">&#x27;Closed&#x27;</span>, 
+    <span class="hljs-string">&#x27;Monday&#x27;</span> =&gt; <span class="hljs-string">&#x27;7:00 AM to 8:00 PM&#x27;</span>,
+    <span class="hljs-string">&#x27;Tuesday&#x27;</span> =&gt; <span class="hljs-string">&#x27;7:00 AM to 8:00 PM&#x27;</span>,
+    <span class="hljs-string">&#x27;Wednesday&#x27;</span> =&gt; <span class="hljs-string">&#x27;7:00 AM to 8:00 PM&#x27;</span>,
+    <span class="hljs-string">&#x27;Thursday&#x27;</span> =&gt; <span class="hljs-string">&#x27;7:00 AM to 8:00 PM&#x27;</span>,
+    <span class="hljs-string">&#x27;Friday&#x27;</span> =&gt; <span class="hljs-string">&#x27;7:00 AM to 8:00 PM&#x27;</span>,
+    <span class="hljs-string">&#x27;Saturday&#x27;</span> =&gt; <span class="hljs-string">&#x27;9:00 AM to 5:00 PM&#x27;</span>
+];
+</code></pre>
+<p></details></p>
+<p><details><summary>Nouvelle fonction <code>show()</code></summary></p>
+<p>La paramètre <code>$viewData</code> représente les données que l'on veut transmettre à nos <code>views/templates</code>. C'est un tableau (<code>array</code>) qui peut contenir 0, 1 ou plusieurs données selon le nombre d'informations nécessaires à la génération du HTML dans nos <code>views/templates</code>.</p>
+<pre><code class="hljs php language-php"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">show</span>(<span class="hljs-params"><span class="hljs-variable">$viewName</span>, <span class="hljs-variable">$viewData</span> = []</span>)
+</span>{
+    <span class="hljs-comment">// $viewData est disponible dans chaque fichier de vue</span>
+    <span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/views/header.tpl.php&#x27;</span>;
+    <span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/views/&#x27;</span>.<span class="hljs-variable">$viewName</span>.<span class="hljs-string">&#x27;.tpl.php&#x27;</span>;
+    <span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/views/footer.tpl.php&#x27;</span>;
+}    
+</code></pre>
+<p></details></p>
+<h2 id="étape-5--controllers">Étape 5 : controllers</h2>
+<ul>
+<li><p><strong>créer une classe <code>MainController</code></strong> dans le sous-répertoire <code>controllers</code></p></li>
+<li><p><strong>déclarer 3 méthodes vides</strong> dans ce <code>MainController</code> :</p></li>
+<li><p><code>home</code> (correspondant à la page d'accueil)</p></li>
+<li><p><code>products</code> (correspondant à la page "products")</p></li>
+<li><p><code>store</code> (correspondant à la page "store")</p></li>
+<li><p><strong>déclarer la méthode <code>show</code></strong> dans <code>MainController</code> qui va s'occuper d'inclure les <em>views</em></p></li>
+</ul>
+<pre><code class="hljs php language-php">  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">show</span>(<span class="hljs-params"><span class="hljs-variable">$viewName</span>, <span class="hljs-variable">$viewData</span> = []</span>)
+  </span>{
+      <span class="hljs-comment">// $viewData est disponible dans chaque fichier de vue</span>
+      <span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/../views/header.tpl.php&#x27;</span>;
+      <span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/../views/&#x27;</span>.<span class="hljs-variable">$viewName</span>.<span class="hljs-string">&#x27;.tpl.php&#x27;</span>;
+      <span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">&#x27;/../views/footer.tpl.php&#x27;</span>;
+  }
+</code></pre>
+<ul>
+<li><p><strong>dans le corps des 3 méthodes vides</strong> :</p></li>
+<li><p>appeler la méthode <code>show</code> sur l'objet courant (<code>$this</code>) en précisant en argument quelle <em>view</em> vous souhaitez voir afficher</p></li>
+<li><p>exemple pour la méthode <code>home()</code>:</p></li>
+</ul>
+<pre><code class="hljs php language-php">  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">home</span>(<span class="hljs-params"></span>)
+  </span>{
+      <span class="hljs-comment">// Délègue l&#x27;affichage à la méthode &quot;show&quot; du MainController</span>
+      <span class="hljs-variable language_">$this</span>-&gt;<span class="hljs-title function_ invoke__">show</span>(<span class="hljs-string">&#x27;home&#x27;</span>);
+  }
+</code></pre>
+<ul>
+<li><p><strong>dans le corps de la méthode <code>store</code></strong> :</p></li>
+<li><p>appeler la méthode <code>show</code> en ajoutant en <em>2ème argument</em>, un <code>array</code> contenant les données que vous souhaitez transmettre à la <em>view</em></p></li>
+<li><p><strong>modifier le fichier "point d'entrée"</strong> :</p></li>
+<li><p>retirer l'inclusion existante (<em>views</em>)</p></li>
+<li><p>inclure la classe <code>MainController</code></p></li>
+<li><p>instancier un objet <code>MainController</code></p></li>
+<li><p>appeler la méthode de l'objet <code>MainController</code> correspondant au point d'entrée</p>
+<pre><code class="hljs php language-php"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// File index.php</span>
+<span class="hljs-comment">// [...]</span>
+<span class="hljs-comment">// Instanciation de la classe MainController</span>
+<span class="hljs-variable">$controller</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MainController</span>();
+<span class="hljs-comment">// Appel de la méthode correspondant à ce point d&#x27;entrée (page)</span>
+<span class="hljs-variable">$controller</span>-&gt;<span class="hljs-title function_ invoke__">home</span>();
+</code></pre></li>
+<li><p><code>point d'entrée</code> &gt; <code>valeur du paramètre 'page' ?</code> &gt; <code>choix et appel de la méthode du controller</code> &gt; <code>affichage de la bonne view</code> &gt; 👌</p></li>
+</ul>
+<h2 id="dernière-étape">Dernière étape</h2>
+<p>Job's done ! 💪 🎉 🍾</p>
+<p>Se féliciter, relire la structure de nos fichiers et se représenter le parcours du script PHP dans nos fichiers pour afficher une page HTML, depuis le moment où l'utilisateur entre une URL, jusqu'au moment où il voit le résultat s'afficher.</p>
